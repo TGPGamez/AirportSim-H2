@@ -29,5 +29,18 @@ namespace AirportSim_H2.Simulation.LuggageSorting
         {
             IsOpen = false;
         }
+
+        internal void CheckIn(Luggage luggage)
+        {
+            if (Luggage == null)
+            {
+                Luggage = luggage;
+            }
+        }
+
+        internal bool IsLuggageReady()
+        {
+            return (IsOpen) && (Luggage != null);
+        }
     }
 }

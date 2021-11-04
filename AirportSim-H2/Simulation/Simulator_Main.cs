@@ -22,9 +22,11 @@ namespace AirportSim_H2.Simulation
 
         public void Start()
         {
-            if (IsSimulationStarted)
+            if (!IsSimulationStarted)
             {
                 //Start
+
+                IsSimulationStarted = true;
             }
         }
     }

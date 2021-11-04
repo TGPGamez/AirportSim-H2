@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AirportSim_H2.Simulation.Reservation
+namespace AirportSim_H2.Simulation.ReservationRelated
 {
     public class Luggage
     {
