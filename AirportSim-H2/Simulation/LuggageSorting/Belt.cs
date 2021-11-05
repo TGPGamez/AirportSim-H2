@@ -56,5 +56,23 @@ namespace AirportSim_H2.Simulation.LuggageSorting
                 Buffer[0] = default;
             }
         }
+
+        public bool IsPullEmpty()
+        {
+            if (Buffer[Length - 1] == null)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsFirstPlaceEmpty()
+        {
+            if (Buffer[0] == null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

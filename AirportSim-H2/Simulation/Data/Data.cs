@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AirportSim_H2
+namespace AirportSim_H2.Simulation
 {
     public static class Data
     {
