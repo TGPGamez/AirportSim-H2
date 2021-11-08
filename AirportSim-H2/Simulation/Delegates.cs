@@ -6,5 +6,9 @@ using System.Threading.Tasks;
 
 namespace AirportSim_H2.Simulation
 {
-    public delegate void MessageEvent(string msg);
+    public class Delegates
+    {
+        public delegate void MessageEvent(string message);
+        public delegate void TimeEvent();
+    }
 }
