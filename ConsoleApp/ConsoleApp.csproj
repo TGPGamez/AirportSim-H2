@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AirportSim-H2\AirportLib.csproj" />
+    <ProjectReference Include="..\AirportLib\AirportLib.csproj" />
   </ItemGroup>
 
 </Project>

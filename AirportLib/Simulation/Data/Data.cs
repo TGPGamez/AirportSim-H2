@@ -14,7 +14,7 @@ namespace AirportLib
 
         static Data()
         {
-            CityDestinations = File.ReadLines(@"..\..\..\..\Resources\Cities.txt").ToArray();
+            CityDestinations = File.ReadLines(@"Resources\Cities.txt").ToArray();
             Names = File.ReadLines(@"Resources\Names.txt").ToArray();
             Streets = File.ReadLines(@"Resources\Streets.txt").ToArray();
         }

@@ -3,14 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirportLib", "AirportSim-H2\AirportLib.csproj", "{C1239796-D1A7-4DD7-9DA3-0AE6E570789E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp", "WpfApp\WpfApp.csproj", "{7D7A527C-378E-4588-8643-31AC2A02AFD6}"
-	ProjectSection(ProjectDependencies) = postProject
-		{C1239796-D1A7-4DD7-9DA3-0AE6E570789E} = {C1239796-D1A7-4DD7-9DA3-0AE6E570789E}
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{CC6072F3-0264-4B75-A34F-0D384808F22D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirportLib", "AirportLib\AirportLib.csproj", "{1606EE5E-260A-4AB7-94C8-6CF7C445F3AD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfApp", "WpfApp\WpfApp.csproj", "{ACC52856-835D-4511-864B-CB3C198D87E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,18 +15,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C1239796-D1A7-4DD7-9DA3-0AE6E570789E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1239796-D1A7-4DD7-9DA3-0AE6E570789E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1239796-D1A7-4DD7-9DA3-0AE6E570789E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1239796-D1A7-4DD7-9DA3-0AE6E570789E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7D7A527C-378E-4588-8643-31AC2A02AFD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7D7A527C-378E-4588-8643-31AC2A02AFD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7D7A527C-378E-4588-8643-31AC2A02AFD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7D7A527C-378E-4588-8643-31AC2A02AFD6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CC6072F3-0264-4B75-A34F-0D384808F22D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CC6072F3-0264-4B75-A34F-0D384808F22D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC6072F3-0264-4B75-A34F-0D384808F22D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC6072F3-0264-4B75-A34F-0D384808F22D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1606EE5E-260A-4AB7-94C8-6CF7C445F3AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1606EE5E-260A-4AB7-94C8-6CF7C445F3AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1606EE5E-260A-4AB7-94C8-6CF7C445F3AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1606EE5E-260A-4AB7-94C8-6CF7C445F3AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACC52856-835D-4511-864B-CB3C198D87E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACC52856-835D-4511-864B-CB3C198D87E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACC52856-835D-4511-864B-CB3C198D87E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACC52856-835D-4511-864B-CB3C198D87E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

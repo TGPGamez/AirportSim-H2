@@ -5,8 +5,48 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Lufthavns simulation" Height="450" Width="800" Closed="Window_Closed">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Label Background="#3d5a80" Grid.Column="0" Grid.Row="0"/>
+
+        <Menu Grid.Row="0" Grid.Column="1">
+            <MenuItem Header="Hastighed" Margin="2,2">
+                <MenuItem Header="1x" Click="Sim_Speed_Click" Tag="1"/>
+                <MenuItem Header="2x" Click="Sim_Speed_Click" Tag="2"/>
+                <MenuItem Header="4x" Click="Sim_Speed_Click" Tag="4"/>
+                <MenuItem Header="8x" Click="Sim_Speed_Click" Tag="8"/>
+                <MenuItem Header="16x" Click="Sim_Speed_Click" Tag="16"/>
+                <MenuItem Header="32x" Click="Sim_Speed_Click" Tag="32"/>
+                <MenuItem Header="64x" Click="Sim_Speed_Click" Tag="64"/>
+                <MenuItem Header="128x" Click="Sim_Speed_Click" Tag="128"/>
+            </MenuItem>
+            <MenuItem Header="Travlhed" Margin="2,2">
+                <MenuItem Header="Activity 1" Click="Sim_Activity_Click" Tag="1"/>
+                <MenuItem Header="Activity 2" Click="Sim_Activity_Click" Tag="2"/>
+                <MenuItem Header="Activity 3" Click="Sim_Activity_Click" Tag="3"/>
+                <MenuItem Header="Activity 4" Click="Sim_Activity_Click" Tag="4"/>
+                <MenuItem Header="Activity 5" Click="Sim_Activity_Click" Tag="5"/>
+                <MenuItem Header="Activity 6" Click="Sim_Activity_Click" Tag="6"/>
+                <MenuItem Header="Activity 7" Click="Sim_Activity_Click" Tag="7"/>
+                <MenuItem Header="Activity 8" Click="Sim_Activity_Click" Tag="8"/>
+                <MenuItem Header="Activity 9" Click="Sim_Activity_Click" Tag="9"/>
+                <MenuItem Header="Activity 10" Click="Sim_Activity_Click" Tag="10"/>
+            </MenuItem>
+        </Menu>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0"
+                    Background="#3d5a80">
+            <StackPanel Height="40" Width="100" Orientation="Horizontal" Style="{StaticResource ViewStackPanelStyle}">
+                <Image Source="Photos\airport.png"/>
+                <TextBlock Text="Oversigt"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>
