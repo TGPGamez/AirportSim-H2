@@ -1,4 +1,5 @@
-﻿using AirportSim_H2.Simulation.ReservationRelated;
+﻿using AirportSim_H2.Simulation.FlightRelated;
+using AirportSim_H2.Simulation.ReservationRelated;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,13 @@ namespace AirportSim_H2.Simulation
                 "+45" + rand.Next(10000000, 99999999),
                 $"{Data.GetRandomCity()} {Data.GetRandomStreet()} {rand.Next(1, 1000)}"
             );
+        }
+
+        public static Flight CreateRandomFlight(DateTime startArrival, int minArrival, int maxArrival)
+        {
+            startArrival = startArrival.AddMinutes(rand.Next(minArrival, maxArrival));
+
+            return new Flight($"F-{rand.Next(0, 10000)}", rand.Next(100, 300), Data.GetRandomCity(), startArrival.AddMinutes(60), startArrival);
         }
     }
 }
