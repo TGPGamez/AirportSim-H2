@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AirportSim_H2.Simulation
+namespace AirportLib
 {
     public static class Data
     {
@@ -17,9 +14,9 @@ namespace AirportSim_H2.Simulation
 
         static Data()
         {
-            CityDestinations = File.ReadLines(@"..\..\..\Resources\Cities.txt").ToArray();
-            Names = File.ReadLines(@"..\..\..\Resources\Names.txt").ToArray();
-            Streets = File.ReadLines(@"..\..\..\Resources\Streets.txt").ToArray();
+            CityDestinations = File.ReadLines(@"..\..\..\..\Resources\Cities.txt").ToArray();
+            Names = File.ReadLines(@"Resources\Names.txt").ToArray();
+            Streets = File.ReadLines(@"Resources\Streets.txt").ToArray();
         }
 
         public static string GetRandomCity()

@@ -1,11 +1,7 @@
-﻿using AirportSim_H2.Simulation.FlightRelated;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AirportSim_H2.Simulation.BaggageSorting
+namespace AirportLib
 {
     public class GatesInAirport
     {
@@ -14,14 +10,17 @@ namespace AirportSim_H2.Simulation.BaggageSorting
         public GatesInAirport(int gateAmount)
         {
             Gates = new Gate[gateAmount];
-            Reset();
-        }
-
-        internal void Reset()
-        {
             for (int i = 0; i < Gates.Length; i++)
             {
                 Gates[i] = new Gate(i);
+            }
+        }
+
+        internal void Clear()
+        {
+            for (int i = 0; i < Gates.Length; i++)
+            {
+                Gates[i].Close();
             }
         }
 

@@ -1,9 +1,8 @@
-﻿using AirportSim_H2.Simulation;
-using AirportSim_H2.Simulation.FlightRelated;
-using System;
+﻿using System;
 using System.Threading;
+using AirportLib;
 
-namespace AirportSim_H2
+namespace ConsoleApp
 {
     class Program
     {
@@ -35,16 +34,15 @@ namespace AirportSim_H2
 
         public static Simulator Simulator { get; private set; }
 
-        static void Main(string[] args)
+        static void Main()
         {
-            Simulator = new Simulator(10, 15, 12, 20);
+            Simulator = new Simulator(10, 15, 20);
             Simulator.IsAutoGenereatedReservationsEnabled = true;
             Simulator.ExceptionInfo += GeneralErrorInfo;
             Simulator.Sorter.SortingExceptionInfo += SorterExceptionInfo;
             Simulator.Sorter.SortingInfo += SorterInfo;
             Simulator.FlightSchedule.FlightInfo += FlightScheduleInfo;
             Simulator.FlightSchedule.FlightExceptionInfo += FlightScheduleExceptionInfo;
-            //Simulator.Time.Speed = (int)Math.Pow(2, 1);
             Simulator.Start();
 
             Thread display = new Thread(Display);
@@ -64,7 +62,7 @@ namespace AirportSim_H2
                     Console.WriteLine($"SPEED: {Simulator.Time.Speed}x\n");
                     Console.WriteLine("FLIGHT SCHEDULE");
                     Console.WriteLine("DEPARTURE      DESTINATION         FLIGHT      GATE    STATUS                  CHECKIN/BOOKED/MAX");
-                    foreach (Flight flight in Simulator.FlightSchedule.FlightDisplay)
+                    foreach (Flight flight in Simulator.FlightSchedule.ActiveFlights)
                     {
                         Console.Write($"{flight.Departure.ToString("HH:mm")}");
                         Console.SetCursorPosition(14, Console.CursorTop);
@@ -91,7 +89,7 @@ namespace AirportSim_H2
 
         private static void KeyInput()
         {
-            while(true)
+            while (true)
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);
                 for (int i = 0; i < 8; i++)
@@ -103,6 +101,5 @@ namespace AirportSim_H2
                 }
             }
         }
-
     }
 }

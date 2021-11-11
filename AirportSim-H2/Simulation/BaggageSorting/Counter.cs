@@ -1,12 +1,4 @@
-﻿using AirportSim_H2.Simulation.FlightRelated;
-using AirportSim_H2.Simulation.ReservationRelated;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AirportSim_H2.Simulation.BaggageSorting
+﻿namespace AirportLib
 {
     public class Counter
     {
@@ -14,6 +6,8 @@ namespace AirportSim_H2.Simulation.BaggageSorting
         public Luggage Luggage { get; private set; }
         public Flight Flight { get; private set; }
         public bool IsOpen { get; private set; }
+
+        public event MessageEvent CounterExceptionInfo;
 
         public Counter(int id)
         {
@@ -42,7 +36,7 @@ namespace AirportSim_H2.Simulation.BaggageSorting
                 Luggage = luggage;
             } else
             {
-                //Log event -> already has luggage
+                CounterExceptionInfo?.Invoke($"There is already luggage on counter {ID}");
             }
         }
 

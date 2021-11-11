@@ -1,21 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using static AirportSim_H2.Simulation.Delegates;
 
-namespace AirportSim_H2.Simulation
+namespace AirportLib
 {
     public class Time
     {
         private readonly System.Timers.Timer Timer;
-        internal TimeEvent TimeUpdate { get; set; }
+        internal UpdatedEvent TimeUpdate { get; set; }
         public DateTime DateTime { get; private set; }
-        private bool isPausedRequested = false;
+        
         private int speed;
-
         public int Speed
         {
             get { return speed; }
@@ -42,11 +36,7 @@ namespace AirportSim_H2.Simulation
 
         internal void Stop()
         {
-            isPausedRequested = true;
-            while (Timer.Enabled)
-            {
-                Thread.Sleep(1);
-            }
+            Timer.Enabled = false;
             DateTime = DateTime.Now;
         }
 
@@ -58,11 +48,6 @@ namespace AirportSim_H2.Simulation
                 DateTime = DateTime.AddSeconds(15);
                 Monitor.PulseAll(this);
                 Monitor.Exit(this);
-            }
-            if (isPausedRequested)
-            {
-                Timer.Enabled = false;
-                isPausedRequested = false;
             }
         }
     }

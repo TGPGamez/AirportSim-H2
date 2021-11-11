@@ -1,48 +1,48 @@
-﻿using AirportSim_H2.Simulation.BaggageSorting;
-using AirportSim_H2.Simulation.ReservationRelated;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static AirportSim_H2.Simulation.Delegates;
 
-namespace AirportSim_H2.Simulation.FlightRelated
+namespace AirportLib
 {
     public class Flight
     {
-        public MessageEvent FlightInfo { get; set; }
-        public MessageEvent FlightExceptionInfo { get; set; }
+        public event MessageEvent FlightInfo;
+        public event MessageEvent FlightExceptionInfo;
 
         private static readonly Random rand = new Random();
         public static Flight Empty = new Flight("", 0, "", DateTime.MinValue, DateTime.MinValue);
 
         public string Name { get; private set; }
         public int SeatsAmount { get; private set; }
+        public DateTime Arrival { get; private set; }
+        public DateTime Departure { get; private set; }
         public string Destination { get; private set; }
         public FlightStatus Status { get; private set; }
+        public List<Reservation> Reservations { get; private set; }
+        public Queue<Luggage> Luggages { get; private set; }
         public Gate Gate { get; private set; }
         public bool IsAtGate { get; private set; }
-        public DateTime Departure { get; private set; }
-        public DateTime Arrival { get; private set; }
-        public Queue<Luggage> Luggages { get; private set; }
-        public List<Reservation> Reservations { get; private set; }
 
         public Flight(string name, int seatsAmount, string destination, DateTime departure, DateTime arrival)
         {
             Name = name;
-            SeatsAmount = seatsAmount;
-            Destination = destination;
-            Departure = departure;
+            Gate = null;
             Arrival = arrival;
+            Departure = departure;
+            Destination = destination;
             Status = FlightStatus.OpenForReservation;
-            Luggages = new Queue<Luggage>();
+            SeatsAmount = seatsAmount;
             Reservations = new List<Reservation>();
+            Luggages = new Queue<Luggage>();
         }
 
         public int GetCheckedInAmount()
         {
             return Reservations.FindAll(x => x.IsCheckedIn).Count;
+        }
+
+        public int GetNoCheckedInAmount()
+        {
+            return Reservations.Count - GetCheckedInAmount();
         }
 
         public bool CanCheckIn()
@@ -70,6 +70,7 @@ namespace AirportSim_H2.Simulation.FlightRelated
             } else
             {
                 //Log failed reservation due to flight is full
+                FlightExceptionInfo?.Invoke("Reservation failed, flight is full.");
             }
         }
 

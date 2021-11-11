@@ -1,12 +1,7 @@
-﻿using AirportSim_H2.Simulation.FlightRelated;
-using AirportSim_H2.Simulation.ReservationRelated;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AirportSim_H2.Simulation.BaggageSorting
+namespace AirportLib
 {
     public class CountersInAirport
     {
@@ -16,10 +11,10 @@ namespace AirportSim_H2.Simulation.BaggageSorting
         public CountersInAirport(int counterAmount)
         {
             Counters = new Counter[counterAmount];
-            Reset();
+            Clear();
         }
 
-        internal void Reset()
+        internal void Clear()
         {
             for (int i = 0; i < Counters.Length; i++)
             {

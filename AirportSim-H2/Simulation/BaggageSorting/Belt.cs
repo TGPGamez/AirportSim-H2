@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AirportSim_H2.Simulation.BaggageSorting
+﻿namespace AirportLib
 {
     public class Belt<T>
     {
@@ -15,10 +9,16 @@ namespace AirportSim_H2.Simulation.BaggageSorting
         {
             Length = length;
             Buffer = new T[length];
-            Reset();
+            Clear();
         }
 
-        internal void Reset()
+        public T this[int i]
+        {
+            get => Buffer[i];
+            internal set => Buffer[i] = value;
+        }
+
+        internal void Clear()
         {
             for (int i = 0; i < Length; i++)
             {

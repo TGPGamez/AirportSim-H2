@@ -1,12 +1,6 @@
-﻿using AirportSim_H2.Simulation.FlightRelated;
-using AirportSim_H2.Simulation.ReservationRelated;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
-namespace AirportSim_H2.Simulation
+namespace AirportLib
 {
     public static class AutoGenerator
     {

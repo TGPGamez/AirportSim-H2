@@ -1,44 +1,49 @@
-﻿using AirportSim_H2.Simulation.ReservationRelated;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using static AirportSim_H2.Simulation.Delegates;
 
-namespace AirportSim_H2.Simulation.BaggageSorting
+namespace AirportLib
 {
     public class Sorter
     {
         private static readonly Random rand = new Random();
-        public MessageEvent SortingInfo { get; set; }
-        public MessageEvent SortingExceptionInfo { get; set; }
+        public event MessageEvent SortingInfo;
+        public event MessageEvent SortingExceptionInfo;
 
-        private readonly Time Time;
-        private readonly Counter[] Counters;
-        private readonly Gate[] Gates;
+        private readonly Time time;
+        private readonly Counter[] counters;
+        private readonly Gate[] gates;
         private bool isClearRequested = false;
+        private bool isStopRequested = false;
 
+        private Thread sorterThread;
         public Belt<Luggage> Belt { get; private set; }
 
         public Sorter(int beltLength, CountersInAirport countersInAirport, GatesInAirport gatesInAirport, Time time)
         {
             Belt = new Belt<Luggage>(beltLength);
-            Counters = countersInAirport.Counters;
-            Gates = gatesInAirport.Gates;
-            Time = time;
+            counters = countersInAirport.Counters;
+            gates = gatesInAirport.Gates;
+            this.time = time;
         }
 
         internal void Start()
         {
-            Thread sorterThread = new Thread(SortingProcess);
+            sorterThread = new Thread(SortingProcess);
+            sorterThread.Name ="AP-Sorter";
             sorterThread.Start();
         }
 
         internal void Clear()
         {
             isClearRequested = true;
+        }
+
+        internal void Stop()
+        {
+            isStopRequested = true;
+            sorterThread.Join();
         }
 
         private void SortingProcess()
@@ -49,10 +54,10 @@ namespace AirportSim_H2.Simulation.BaggageSorting
                 {
                     CounterToSorterProcess();
                     SorterToGateProcess();
-                    Thread.Sleep(128 / Time.Speed);
+                    Thread.Sleep(128 / time.Speed);
                     if (isClearRequested)
                     {
-                        Belt.Reset();
+                        Belt.Clear();
                         isClearRequested = false;
                     }
                 }
@@ -67,7 +72,7 @@ namespace AirportSim_H2.Simulation.BaggageSorting
         {
             if (Belt.IsSpace())
             {
-                List<Counter> counters = Counters.Where(x => x.IsLuggageReady()).ToList();
+                List<Counter> counters = this.counters.Where(x => x.IsLuggageReady()).ToList();
                 if (counters.Count != 0)
                 {
                     Counter counter = counters[rand.Next(0, counters.Count)];
@@ -86,7 +91,7 @@ namespace AirportSim_H2.Simulation.BaggageSorting
             if (!Belt.IsPullEmpty())
             {
                 Luggage luggage = Belt.Pull();
-                Gate gate = Gates.FirstOrDefault(x => x.ID == luggage.GateID);
+                Gate gate = gates.FirstOrDefault(x => x.ID == luggage.GateID);
                 if (gate != null)
                 {
                     gate.AddLuggage(luggage);

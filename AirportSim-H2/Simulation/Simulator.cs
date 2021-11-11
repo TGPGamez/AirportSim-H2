@@ -1,18 +1,11 @@
-﻿using AirportSim_H2.Simulation.BaggageSorting;
-using AirportSim_H2.Simulation.FlightRelated;
+﻿using System.Threading;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using static AirportSim_H2.Simulation.Delegates;
 
-namespace AirportSim_H2.Simulation
+namespace AirportLib
 {
     public class Simulator
     {
-        public MessageEvent ExceptionInfo { get; set; }
+        public event MessageEvent ExceptionInfo;
 
         public bool IsStarted { get; private set; }
         public bool IsAutoGenereatedReservationsEnabled { get; set; }
@@ -25,7 +18,7 @@ namespace AirportSim_H2.Simulation
             {
                 if (value > 0 && value <= 10)
                 {
-                    activityLevel = value; 
+                    activityLevel = value;
                 }
             }
         }
@@ -36,14 +29,14 @@ namespace AirportSim_H2.Simulation
         public FlightSchedule FlightSchedule { get; private set; }
         public Sorter Sorter { get; private set; }
 
-        public Simulator(int counterAmount, int gateAmount, int flightDisplayLength, int beltLength)
+        public Simulator(int counterAmount, int gateAmount, int beltLength)
         {
             Time = new Time();
             Time.TimeUpdate = OnTimeUpdate;
 
             CountersInAirport = new CountersInAirport(counterAmount);
             GatesInAirport = new GatesInAirport(gateAmount);
-            FlightSchedule = new FlightSchedule(Time, flightDisplayLength);
+            FlightSchedule = new FlightSchedule(Time);
             Sorter = new Sorter(beltLength, CountersInAirport, GatesInAirport, Time);
         }
 
@@ -59,12 +52,29 @@ namespace AirportSim_H2.Simulation
             }
         }
 
+        public void Stop()
+        {
+            Time.Stop();
+            Sorter.Stop();
+        }
+
+        public void Restart()
+        {
+            Time.Stop();
+            FlightSchedule.Clear();
+            Sorter.Clear();
+            CountersInAirport.Clear();
+            GatesInAirport.Clear();
+            Update();
+            Time.Start();
+        }
+
         public void Update()
         {
             FlightSchedule.GenerateFlights(ActivityLevel, IsAutoGenereatedReservationsEnabled);
             FlightSchedule.UpdateFlightsStatuses();
             FlightSchedule.RemoveExpiredFlights();
-            FlightSchedule.UpdateFlightDisplay();
+            FlightSchedule.UpdateActiveFlights();
 
             CountersInAirport.AutoCheckIn();
             CountersInAirport.OpenCountersForFlights(FlightSchedule);
@@ -72,13 +82,6 @@ namespace AirportSim_H2.Simulation
 
             GatesInAirport.OpenGatesForFlights(FlightSchedule);
             GatesInAirport.CloseGates();
-        }
-
-        public void Restart()
-        {
-            Time.Stop();
-            Update();
-            Time.Start();
         }
 
         private void OnTimeUpdate()
