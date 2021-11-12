@@ -10,6 +10,8 @@
     <None Remove="Photos\airport.png" />
     <None Remove="Photos\console.png" />
     <None Remove="Photos\Home.png" />
+    <None Remove="Photos\luggage.png" />
+    <None Remove="Photos\LuggageIcon.png" />
     <None Remove="Photos\menu_button.png" />
     <None Remove="Photos\plane.png" />
   </ItemGroup>
@@ -22,6 +24,8 @@
     <Resource Include="Photos\airport.png" />
     <Resource Include="Photos\console.png" />
     <Resource Include="Photos\Home.png" />
+    <Resource Include="Photos\luggage.png" />
+    <Resource Include="Photos\LuggageIcon.png" />
     <Resource Include="Photos\menu_button.png" />
     <Resource Include="Photos\plane.png" />
   </ItemGroup>
