@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace AirportLib
 {
-    public class Flight
+    public class Flight : ILog
     {
         public event MessageEvent FlightInfo;
         public event MessageEvent FlightExceptionInfo;
@@ -94,8 +94,8 @@ namespace AirportLib
                 //Gets the message out from our custom Attribute LogMessage that is on our FlightStatus
                 //and replaces placeholder values with information values
                 string logMessage = FlightStatus.OpenForReservation.GetAttribute<LogMessage>()
-                    .Message.ReplaceWithValues("firstName|destination", $"{passenger.FirstName}|{Destination}");
-                FlightInfo?.Invoke(logMessage);
+                    .Message.ReplaceWithValue("firstName|destination", $"{passenger.FirstName}|{Destination}");
+                Log(logMessage);
             } else
             {
                 //Log failed reservation due to flight is full
@@ -123,7 +123,7 @@ namespace AirportLib
 
         internal void UpdateStatus(Time time)
         {
-            string logMessage = String.Empty;
+            string logMessage;
             if (Status != FlightStatus.OpenForReservation && Reservations.Count < 20)
             {
                 if (ChangeStatusIfNew(FlightStatus.Canceled))
@@ -131,16 +131,14 @@ namespace AirportLib
                     //Gets the message out from our custom Attribute LogMessage that is on our FlightStatus
                     //and replaces placeholder values with information values
                     logMessage = FlightStatus.Canceled.GetAttribute<LogMessage>().Message.ReplaceWithValue("name", Name);
-                    FlightExceptionInfo?.Invoke(logMessage);
+                    ExceptionLog(logMessage);
+                    //FlightExceptionInfo?.Invoke(logMessage);
                 }
             } else
             {
                 double timeToTakeOff = Departure.Subtract(time.DateTime).TotalMinutes;
                 logMessage = ChangeStatusesInsidePeriods(timeToTakeOff);
-                if (logMessage != null)
-                {
-                    FlightInfo?.Invoke(logMessage);
-                }
+                Log(logMessage);
             }
 
         }
@@ -195,6 +193,22 @@ namespace AirportLib
                 return true;
             }
             return false;
+        }
+
+        public void Log(string message)
+        {
+            if (message.Length > 0)
+            {
+                FlightInfo?.Invoke(message);
+            }
+        }
+
+        public void ExceptionLog(string message)
+        {
+            if (message.Length > 0)
+            {
+                FlightExceptionInfo?.Invoke(message);
+            }
         }
     }
 }

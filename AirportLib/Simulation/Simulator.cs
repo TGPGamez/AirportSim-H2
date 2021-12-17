@@ -69,11 +69,14 @@ namespace AirportLib
         public void Restart()
         {
             Time.Stop();
+
             FlightSchedule.Clear();
             Sorter.Clear();
             CountersInAirport.Clear();
             GatesInAirport.Clear();
+
             Update();
+
             Time.Start();
         }
 

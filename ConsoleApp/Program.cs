@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using AirportLib;
+using System.Runtime.InteropServices;
 
 namespace ConsoleApp
 {
@@ -36,6 +37,7 @@ namespace ConsoleApp
 
         static void Main()
         {
+
             Simulator = new Simulator(10, 15, 20);
             Simulator.IsAutoGenereatedReservationsEnabled = true;
             Simulator.ExceptionInfo += GeneralErrorInfo;
@@ -46,9 +48,9 @@ namespace ConsoleApp
             Simulator.Start();
 
             Thread display = new Thread(Display);
-            Thread keyInput = new Thread(KeyInput);
+            //Thread keyInput = new Thread(KeyInput);
             display.Start();
-            keyInput.Start();
+            //keyInput.Start();
 
         }
 
@@ -58,11 +60,15 @@ namespace ConsoleApp
             {
                 if (Monitor.TryEnter(Simulator))
                 {
+                    
                     Console.SetCursorPosition(0, 0);
+                    
                     Console.WriteLine($"TIME: {Simulator.Time.DateTime.ToShortTimeString()}");
                     Console.WriteLine($"SPEED: {Simulator.Time.Speed}x\n");
+                    Console.WriteLine($"ACTIVITY: Level {Simulator.ActivityLevel}\n");
                     Console.WriteLine("FLIGHT SCHEDULE");
                     Console.WriteLine("DEPARTURE      DESTINATION         FLIGHT      GATE    STATUS                  CHECKIN/BOOKED/MAX");
+                    Console.SetCursorPosition(0, 5);
                     foreach (Flight flight in Simulator.FlightSchedule.ActiveFlights)
                     {
                         Console.Write($"{flight.Departure.ToString("HH:mm")}");
@@ -93,13 +99,34 @@ namespace ConsoleApp
             while (true)
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);
-                for (int i = 0; i < 8; i++)
+                if ((int)key.Key >= 49 && (int)key.Key < 57)
                 {
-                    if ((i + 49) == (int)key.Key)
+                    for (int i = 0; i < 8; i++)
                     {
-                        Simulator.Time.Speed = (int)Math.Pow(2, i);
+                        if ((i + 49) == (int)key.Key)
+                        {
+                            Simulator.Time.Speed = (int)Math.Pow(2, i);
+                        }
                     }
                 }
+                else
+                {
+                    switch ((int)key.Key)
+                    {
+                        case 82:
+                            Simulator.Restart();
+                            break;
+                        case 37:
+                            Simulator.ActivityLevel--;
+                            break;
+                        case 39:
+                            Simulator.ActivityLevel++;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                
             }
         }
     }

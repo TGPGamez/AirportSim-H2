@@ -91,15 +91,14 @@ namespace AirportLib
         /// <param name="replaceWith"></param>
         /// <returns></returns>
         //private static string pattern = @"(\$[^\s]+)";
-        public static string ReplaceWithValue(this string message, string searchFor, string replaceWith)
-        {
-            string pattern = @"(\$(" + searchFor + "))";
-            Match match = Regex.Match(message, pattern);
+        //public static string ReplaceWithValue(this string message, string searchFor, string replaceWith)
+        //{
+        //    string pattern = @"(\$(" + searchFor + "))";
+        //    Match match = Regex.Match(message, pattern);
 
-            string result = Regex.Replace(message, pattern, replaceWith, RegexOptions.Multiline);
-            return result;
-            //return message.Replace(searchFor, replaceWith);
-        }
+        //    string result = Regex.Replace(message, pattern, replaceWith, RegexOptions.Multiline);
+        //    return result;
+        //}
 
         /// <summary>
         /// Replaces out from a Array of searchsFor with each value in the Array repalcesWith
@@ -108,18 +107,30 @@ namespace AirportLib
         /// <param name="searchsFor"></param>
         /// <param name="replacesWith"></param>
         /// <returns></returns>
-        public static string ReplaceWithValues(this string message, string searchString, string replaceString)
+        public static string ReplaceWithValue(this string message, string searchString, string replaceString)
         {
-            string[] searchsFor = GetValues(searchString);
-            string[] replacesWith = GetValues(replaceString);
-            for (int i = 0; i < searchsFor.Length; i++)
+            if (searchString.Contains('|'))
             {
-                if (replacesWith[i] != null)
+                if (replaceString.Contains('|'))
                 {
-                    message = ReplaceWithValue(message, searchsFor[i], replacesWith[i]);
+                    string[] searchsFor = GetValues(searchString);
+                    string[] replacesWith = GetValues(replaceString);
+                    for (int i = 0; i < searchsFor.Length; i++)
+                    {
+                        if (replacesWith[i] != null)
+                        {
+                            message = ReplaceWithValue(message, searchsFor[i], replacesWith[i]);
+                        }
+                    }
+                    return message;
                 }
             }
-            return message;
+            string pattern = @"(\$(" + searchString + "))";
+            Match match = Regex.Match(message, pattern);
+
+            string result = Regex.Replace(message, pattern, replaceString, RegexOptions.Multiline);
+            return result;
+
         }
 
         private static string[] GetValues(string inputString)
