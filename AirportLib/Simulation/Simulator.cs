@@ -40,7 +40,9 @@ namespace AirportLib
             Sorter = new Sorter(beltLength, CountersInAirport, GatesInAirport, Time);
         }
 
-
+        /// <summary>
+        /// Starts simulation
+        /// </summary>
         public void Start()
         {
             if (!IsStarted)
@@ -52,12 +54,18 @@ namespace AirportLib
             }
         }
 
+        /// <summary>
+        /// Stops simulation
+        /// </summary>
         public void Stop()
         {
             Time.Stop();
             Sorter.Stop();
         }
 
+        /// <summary>
+        /// Restart simulation
+        /// </summary>
         public void Restart()
         {
             Time.Stop();
@@ -69,6 +77,9 @@ namespace AirportLib
             Time.Start();
         }
 
+        /// <summary>
+        /// Update Airport
+        /// </summary>
         public void Update()
         {
             FlightSchedule.GenerateFlights(ActivityLevel, IsAutoGenereatedReservationsEnabled);
@@ -84,6 +95,10 @@ namespace AirportLib
             GatesInAirport.CloseGates();
         }
 
+        /// <summary>
+        /// Used to update simulation
+        /// Method that is called when our TimeUpdate event on our timer elapse
+        /// </summary>
         private void OnTimeUpdate()
         {
             try

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AirportLib;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace WpfApp.ViewModel
 {
     class NavigationViewModel : INotifyPropertyChanged
     {
+
         public ICommand OverViewCommand { get; set; }
         public ICommand LogViewCommand { get; set; }
 
@@ -30,8 +32,8 @@ namespace WpfApp.ViewModel
 
 
         public NavigationViewModel()
-
         {
+
 
             OverViewCommand = new BaseCommand(OpenOverView);
 

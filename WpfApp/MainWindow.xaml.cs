@@ -29,6 +29,7 @@ namespace WpfApp
         public MainWindow()
         {
             InitializeComponent();
+           
             this.DataContext = new NavigationViewModel();
             InitializeAirport();
         }
@@ -37,6 +38,7 @@ namespace WpfApp
         {
             Simulator = new Simulator(15, 20, 25);
             Simulator.IsAutoGenereatedReservationsEnabled = true;
+
             Simulator.Start();
             new DispatcherTimer(TimeSpan.FromSeconds(0.01),
                 DispatcherPriority.Normal,

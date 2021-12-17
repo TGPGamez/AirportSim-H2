@@ -17,10 +17,17 @@ namespace AirportLib
             Luggages = new Queue<Luggage>();
         }
 
+        /// <summary>
+        /// Open Gate
+        /// </summary>
         internal void Open()
         {
             IsOpen = true;
         }
+
+        /// <summary>
+        /// Close Gate
+        /// </summary>
         internal void Close()
         {
             Luggages.Clear();
@@ -28,22 +35,37 @@ namespace AirportLib
             IsOpen = false;
         }
 
+        /// <summary>
+        /// Add luggage
+        /// </summary>
+        /// <param name="luggage"></param>
         internal void AddLuggage(Luggage luggage)
         {
             Luggages.Enqueue(luggage);
         }
 
+        /// <summary>
+        /// Reserve a Flight
+        /// </summary>
+        /// <param name="flight"></param>
         internal void ReserveFlight(Flight flight)
         {
             Flight = flight;
             IsFlightReserved = true;
         }
+
+        /// <summary>
+        /// Remove the reserved Flight
+        /// </summary>
         internal void RemoveReservedFlight()
         {
             Flight = null;
             IsFlightReserved = false;
         }
 
+        /// <summary>
+        /// Export all luggage onboard Flight
+        /// </summary>
         internal void ExportLuggageToFlight()
         {
             if (IsFlightReserved)

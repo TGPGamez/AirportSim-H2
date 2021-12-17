@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AirportLib
 {
@@ -35,38 +36,66 @@ namespace AirportLib
             Luggages = new Queue<Luggage>();
         }
 
+        /// <summary>
+        /// Gets amount of reservations thats checked in
+        /// </summary>
+        /// <returns></returns>
         public int GetCheckedInAmount()
         {
             return Reservations.FindAll(x => x.IsCheckedIn).Count;
         }
 
+        /// <summary>
+        /// Gets the amount of reservations that isn't checked in
+        /// </summary>
+        /// <returns></returns>
         public int GetNoCheckedInAmount()
         {
             return Reservations.Count - GetCheckedInAmount();
         }
 
+        /// <summary>
+        /// Check if it is possible to check in to flight
+        /// </summary>
+        /// <returns></returns>
         public bool CanCheckIn()
         {
             return Status == FlightStatus.OnTheWay || Status == FlightStatus.Landing;
         } 
 
+        /// <summary>
+        /// Load luggages onboard flight
+        /// </summary>
+        /// <param name="luggages"></param>
         internal void LoadLuggages(Queue<Luggage> luggages)
         {
             Luggages = luggages;
         }
 
-        internal void AssignGate(Gate gate)
+        /// <summary>
+        /// Reserve the flight to a gate
+        /// </summary>
+        /// <param name="gate"></param>
+        internal void ReserveGate(Gate gate)
         {
             Gate = gate;
             IsAtGate = true;
         }
 
+        /// <summary>
+        /// Book a ticket to the flight
+        /// </summary>
+        /// <param name="passenger"></param>
         internal void BookFlightTicket(Passenger passenger)
         {
             if (Status == FlightStatus.OpenForReservation)
             {
                 Reservations.Add(new Reservation(passenger, this));
-                FlightInfo?.Invoke($"{passenger.FirstName} has booked a ticket to {Destination}");
+                //Gets the message out from our custom Attribute LogMessage that is on our FlightStatus
+                //and replaces placeholder values with information values
+                string logMessage = FlightStatus.OpenForReservation.GetAttribute<LogMessage>()
+                    .Message.ReplaceWithValues("firstName|destination", $"{passenger.FirstName}|{Destination}");
+                FlightInfo?.Invoke(logMessage);
             } else
             {
                 //Log failed reservation due to flight is full
@@ -74,6 +103,10 @@ namespace AirportLib
             }
         }
 
+        /// <summary>
+        /// Auto book flight tickets
+        /// </summary>
+        /// <param name="minSeats"></param>
         internal void AutoBookFlightTickets(int minSeats)
         {
             if (minSeats > SeatsAmount)
@@ -90,123 +123,70 @@ namespace AirportLib
 
         internal void UpdateStatus(Time time)
         {
+            string logMessage = String.Empty;
             if (Status != FlightStatus.OpenForReservation && Reservations.Count < 20)
             {
                 if (ChangeStatusIfNew(FlightStatus.Canceled))
                 {
-                    FlightExceptionInfo?.Invoke($"{Name} got cancelled due to insufficient reservations");
+                    //Gets the message out from our custom Attribute LogMessage that is on our FlightStatus
+                    //and replaces placeholder values with information values
+                    logMessage = FlightStatus.Canceled.GetAttribute<LogMessage>().Message.ReplaceWithValue("name", Name);
+                    FlightExceptionInfo?.Invoke(logMessage);
                 }
-            }
-
-            double timeToTakeOff = Departure.Subtract(time.DateTime).TotalMinutes;
-            // Updates the different flight states
-            if (ChangeStatusInsidePeriod(timeToTakeOff, 360, 900, FlightStatus.FarAway))
+            } else
             {
-                FlightInfo?.Invoke($"{Name} is now closed for reservations");
-            }
-            if (ChangeStatusInsidePeriod(timeToTakeOff, 70, 360, FlightStatus.OnTheWay))
-            {
-                FlightInfo?.Invoke($"{Name} is 290 min from the airport");
-            }
-            if (ChangeStatusInsidePeriod(timeToTakeOff, 60, 70, FlightStatus.Landing))
-            {
-                FlightInfo?.Invoke($"{Name} has just landed");
-            }
-            if (ChangeStatusInsidePeriod(timeToTakeOff, 30, 60, FlightStatus.Refilling))
-            {
-                FlightInfo?.Invoke($"{Name} is being filled with luggages");
-            }
-            if (ChangeStatusInsidePeriod(timeToTakeOff, 5, 30, FlightStatus.Boarding))
-            {
-                FlightInfo?.Invoke($"{Name} is now boading");
-            }
-            if (ChangeStatusInsidePeriod(timeToTakeOff, 0, 5, FlightStatus.Takeoff))
-            {
-                if (GetCheckedInAmount() == Reservations.Count)
+                double timeToTakeOff = Departure.Subtract(time.DateTime).TotalMinutes;
+                logMessage = ChangeStatusesInsidePeriods(timeToTakeOff);
+                if (logMessage != null)
                 {
-                    FlightInfo?.Invoke($"{Name} is about to takeoff with all booked passengers");
-                }
-                else
-                {
-                    FlightExceptionInfo?.Invoke($"{Name} is about to takeoff with missing passengers due to bustle");
+                    FlightInfo?.Invoke(logMessage);
                 }
             }
-
-            //if (ChangeStatusesInsidePeriods(timeToTakeOff))
-            //{
-            //    LogUpdatedFlightStatus();
-            //}
 
         }
 
-        private bool ChangeStatusesInsidePeriods(double timeToTakeOff)
+        //Used to get values from FlightStatus except for Canceled and OpenForReservation
+        private static IEnumerable<FlightStatus> statuses = Enum
+                .GetValues(typeof(FlightStatus))
+                .Cast<FlightStatus>()
+                .Where(item => item != FlightStatus.Canceled || item != FlightStatus.OpenForReservation);
+
+        /// <summary>
+        /// Used to changes status out from the time to take off and return LogMessage
+        /// </summary>
+        /// <param name="timeToTakeOff"></param>
+        /// <returns></returns>
+        private string ChangeStatusesInsidePeriods(double timeToTakeOff)
         {
             if (Status == FlightStatus.Canceled)
             {
-                return false;
+                return null;
             }
-            foreach (FlightStatus status in Enum.GetValues(typeof(FlightStatus)))
+            string logMessage = string.Empty;
+            foreach (FlightStatus status in statuses)
             {
+                //Gets min and max period from StatusField Attribute
                 int minPeriod = status.GetAttribute<StatusField>().Minperiod;
                 int maxPeriod = status.GetAttribute<StatusField>().Maxperiod;
+                //Determines if the timeToTakeOff is between our min and max period
                 if ((timeToTakeOff > minPeriod) && (timeToTakeOff < maxPeriod))
                 {
                     if (ChangeStatusIfNew(status))
                     {
-                        return true;
+                        //Gets the message out from our custom Attribute LogMessage that is on our FlightStatus
+                        logMessage = status.GetAttribute<LogMessage>().Message;
                     }
                 }
             }
-            return false;
+            //Replaces placeholder values with information values
+            return logMessage.ReplaceWithValue("name", Name);
         }
 
-        private bool ChangeStatusInsidePeriod(double timeToTakeoff, int minPeriod, int maxPeriod, FlightStatus flightStatus)
-        {
-            if (Status == FlightStatus.Canceled)
-            {
-                return false;
-            }
-
-            if ((timeToTakeoff > minPeriod) && (timeToTakeoff < maxPeriod))
-            {
-                return ChangeStatusIfNew(flightStatus);
-            }
-            return false;
-        }
-
-        private void LogUpdatedFlightStatus()
-        {
-            switch (Status)
-            {
-                case FlightStatus.FarAway:
-                    FlightInfo?.Invoke($"{Name} is now closed for reservations.");
-                    break;
-                case FlightStatus.OnTheWay:
-                    FlightInfo?.Invoke($"{Name} is 290 minutes from landing.");
-                    break;
-                case FlightStatus.Landing:
-                    FlightInfo?.Invoke($"{Name} has just landed.");
-                    break;
-                case FlightStatus.Refilling:
-                    FlightInfo?.Invoke($"{Name} is being filled with luggages");
-                    break;
-                case FlightStatus.Boarding:
-                    FlightInfo?.Invoke($"{Name} is now boarding.");
-                    break;
-                case FlightStatus.Takeoff:
-                    if (GetCheckedInAmount() == Reservations.Count)
-                    {
-                        FlightInfo?.Invoke($"{Name} is about to takeoff full.");
-                    } else
-                    {
-                        FlightExceptionInfo?.Invoke($"{Name} is about to takeoff with missing passengers.");
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
+        /// <summary>
+        /// Changes FlightStatus if it isn't the same FlightStatus
+        /// </summary>
+        /// <param name="flightStatus"></param>
+        /// <returns></returns>
         private bool ChangeStatusIfNew(FlightStatus flightStatus)
         {
             if (Status != flightStatus)

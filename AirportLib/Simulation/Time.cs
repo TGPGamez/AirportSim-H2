@@ -29,22 +29,35 @@ namespace AirportLib
             Speed = 1;
         }
 
+        /// <summary>
+        /// Starts Timer
+        /// </summary>
         internal void Start()
         {
             Timer.Enabled = true;
         }
 
+        /// <summary>
+        /// Stops Timer
+        /// </summary>
         internal void Stop()
         {
             Timer.Enabled = false;
             DateTime = DateTime.Now;
         }
 
+        /// <summary>
+        /// Event to call when Timer is Elapsed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnTick(object sender, System.Timers.ElapsedEventArgs e)
         {
             if (Monitor.TryEnter(this))
             {
+                //Invoke event
                 TimeUpdate.Invoke();
+                //Add to "time"
                 DateTime = DateTime.AddSeconds(15);
                 Monitor.PulseAll(this);
                 Monitor.Exit(this);

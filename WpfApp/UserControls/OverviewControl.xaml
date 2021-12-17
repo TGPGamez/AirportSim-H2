@@ -7,6 +7,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="Black">
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <GroupBox Header="Skrænker" Grid.Row="0">
+            <ScrollViewer>
+                <WrapPanel Orientation="Horizontal" x:Name="WP_Counters"/>
+            </ScrollViewer>
+        </GroupBox>
     </Grid>
 </UserControl>

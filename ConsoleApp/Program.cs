@@ -49,6 +49,7 @@ namespace ConsoleApp
             Thread keyInput = new Thread(KeyInput);
             display.Start();
             keyInput.Start();
+
         }
 
         private static void Display()
