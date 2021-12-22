@@ -10,6 +10,8 @@ namespace WpfApp.MVVM.ViewModels
 {
     public class FlightScheduleViewModel : ViewModelBase
     {
+        //Need Updates when status is changed on a flight
+
         public FlightSchedule FlightSchedule { get; set; }
         private readonly ObservableCollection<Flight> flights;
         public IEnumerable<Flight> Flights => flights; 
