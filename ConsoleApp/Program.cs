@@ -48,9 +48,9 @@ namespace ConsoleApp
             Simulator.Start();
 
             Thread display = new Thread(Display);
-            //Thread keyInput = new Thread(KeyInput);
+            Thread keyInput = new Thread(KeyInput);
             display.Start();
-            //keyInput.Start();
+            keyInput.Start();
 
         }
 
@@ -68,7 +68,7 @@ namespace ConsoleApp
                     Console.WriteLine($"ACTIVITY: Level {Simulator.ActivityLevel}\n");
                     Console.WriteLine("FLIGHT SCHEDULE");
                     Console.WriteLine("DEPARTURE      DESTINATION         FLIGHT      GATE    STATUS                  CHECKIN/BOOKED/MAX");
-                    Console.SetCursorPosition(0, 5);
+                    Console.SetCursorPosition(0, 7);
                     foreach (Flight flight in Simulator.FlightSchedule.ActiveFlights)
                     {
                         Console.Write($"{flight.Departure.ToString("HH:mm")}");
@@ -114,6 +114,8 @@ namespace ConsoleApp
                     switch ((int)key.Key)
                     {
                         case 82:
+                            //Not working 100%, because if you restart while console is writing out the flights
+                            //then the console will throw an exception that the list was modified
                             Simulator.Restart();
                             break;
                         case 37:

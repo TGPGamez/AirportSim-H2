@@ -10,7 +10,10 @@ namespace AirportLib
         public GatesInAirport(int gateAmount)
         {
             Gates = new Gate[gateAmount];
-            Clear();
+            for (int i = 0; i < Gates.Length; i++)
+            {
+                Gates[i] = new Gate(i);
+            }
         }
 
         /// <summary>
@@ -20,7 +23,7 @@ namespace AirportLib
         {
             for (int i = 0; i < Gates.Length; i++)
             {
-                Gates[i] = new Gate(i);
+                Gates[i].Close();
             }
         }
 

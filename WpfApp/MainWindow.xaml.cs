@@ -15,7 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using AirportLib;
-using WpfApp.ViewModel;
+using WpfApp.MVVM.ViewModels;
 
 namespace WpfApp
 {
@@ -24,20 +24,25 @@ namespace WpfApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        public object SelectedViewModel { get; private set; }
+
         public Simulator Simulator { get; private set; }
 
         public MainWindow()
         {
             InitializeComponent();
-           
-            this.DataContext = new NavigationViewModel();
             InitializeAirport();
         }
 
+        
+
         private void InitializeAirport()
         {
-            Simulator = new Simulator(15, 20, 25);
+
+            Simulator = new Simulator(15, 20, 50);
             Simulator.IsAutoGenereatedReservationsEnabled = true;
+
+            DataContext = new NavigationViewModel(Simulator);
 
             Simulator.Start();
             new DispatcherTimer(TimeSpan.FromSeconds(0.01),
@@ -77,5 +82,6 @@ namespace WpfApp
         private void Window_Closed(object sender, EventArgs e) => Simulator.Stop();
 
         private void Exit_Click(object sender, RoutedEventArgs e) => Application.Current.Shutdown();
+
     }
 }

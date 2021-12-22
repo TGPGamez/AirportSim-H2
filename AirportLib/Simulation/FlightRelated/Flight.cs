@@ -99,7 +99,7 @@ namespace AirportLib
             } else
             {
                 //Log failed reservation due to flight is full
-                FlightExceptionInfo?.Invoke("Reservation failed, flight is full.");
+                Log("Reservation failed, flight is full.");
             }
         }
 
@@ -118,7 +118,7 @@ namespace AirportLib
             {
                 BookFlightTicket(AutoGenerator.CreateRandomPassenger());
             }
-            FlightInfo?.Invoke($"{amount} auto generated people has made a reservation on {Name}");
+            Log($"{amount} auto generated people has made a reservation on {Name}");
         }
 
         internal void UpdateStatus(Time time)
@@ -147,7 +147,7 @@ namespace AirportLib
         private static IEnumerable<FlightStatus> statuses = Enum
                 .GetValues(typeof(FlightStatus))
                 .Cast<FlightStatus>()
-                .Where(item => item != FlightStatus.Canceled || item != FlightStatus.OpenForReservation);
+                .Where(item => item != FlightStatus.Canceled || item != FlightStatus.OpenForReservation || item != FlightStatus.TakeoffMissing);
 
         /// <summary>
         /// Used to changes status out from the time to take off and return LogMessage
@@ -156,10 +156,6 @@ namespace AirportLib
         /// <returns></returns>
         private string ChangeStatusesInsidePeriods(double timeToTakeOff)
         {
-            if (Status == FlightStatus.Canceled)
-            {
-                return null;
-            }
             string logMessage = string.Empty;
             foreach (FlightStatus status in statuses)
             {
@@ -171,6 +167,14 @@ namespace AirportLib
                 {
                     if (ChangeStatusIfNew(status))
                     {
+                        if (status == FlightStatus.Takeoff)
+                        {
+                            if (GetCheckedInAmount() == Reservations.Count)
+                            {
+                                logMessage = FlightStatus.TakeoffMissing.GetAttribute<LogMessage>().Message;
+                                continue;
+                            }
+                        }
                         //Gets the message out from our custom Attribute LogMessage that is on our FlightStatus
                         logMessage = status.GetAttribute<LogMessage>().Message;
                     }

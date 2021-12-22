@@ -62,7 +62,7 @@ namespace AirportLib
         {
             try
             {
-                while (true)
+                while (!isStopRequested)
                 {
                     CounterToSorterProcess();
                     SorterToGateProcess();

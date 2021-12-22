@@ -3,17 +3,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewModels="clr-namespace:WpfApp.ViewModel"
-        xmlns:views="clr-namespace:WpfApp.UserControls"
+        xmlns:views="clr-namespace:WpfApp.MVVM.Views"
+        xmlns:viewmodels="clr-namespace:WpfApp.MVVM.ViewModels"
         mc:Ignorable="d"
         Title="Lufthavns simulation" Height="450" Width="800" Closed="Window_Closed"
         Icon="Photos\LuggageIcon.png">
     <Window.Resources>
-        <DataTemplate DataType="{x:Type viewModels:OverviewViewModel}">
-            <views:OverviewControl/>
+        <DataTemplate DataType="{x:Type viewmodels:LogsViewModel}" x:Name="AP_LogView">
+            <views:LogsView/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type viewModels:ConsoleViewModel}">
-            <views:AirportLogView/>
+        <DataTemplate DataType="{x:Type viewmodels:FlightScheduleViewModel}" x:Name="AP_ScheduleView">
+            <views:FlightScheduleView/>
         </DataTemplate>
     </Window.Resources>
     <Grid>
@@ -62,15 +62,15 @@
                     <TextBlock Text="Oversigt"/>
                 </StackPanel>
             </Button>
-            <Button Command="{Binding LogViewCommand}">
+            <Button Command="{Binding LogsViewCommand}">
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="Photos\airport.png"/>
+                    <Image Source="Photos\console.png"/>
                     <TextBlock Text="Logs"/>
                 </StackPanel>
             </Button>
         </StackPanel>
 
-        <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding SelectedViewModel}"/>
+        <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding Path=SelectedViewModel}"/>
 
         <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Background="#3d5a80"
               TextBlock.Foreground="#98c1d9">

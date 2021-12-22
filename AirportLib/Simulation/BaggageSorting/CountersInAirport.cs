@@ -10,7 +10,10 @@ namespace AirportLib
         public CountersInAirport(int counterAmount)
         {
             Counters = new Counter[counterAmount];
-            Clear();
+            for (int i = 0; i < Counters.Length; i++)
+            {
+                Counters[i] = new Counter(i);
+            }
         }
 
         /// <summary>
@@ -20,7 +23,7 @@ namespace AirportLib
         {
             for (int i = 0; i < Counters.Length; i++)
             {
-                Counters[i] = new Counter(i);
+                Counters[i].Close();
             }
         }
 
